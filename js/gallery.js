@@ -64,32 +64,46 @@ const images = [
   },
 ];
 
-const container = document.querySelector(".images");
+const container = document.querySelector('.gallery');
+
 container.insertAdjacentHTML('beforeend', genImageTable(images));
 
 function genImageTable(images) {
-    return images.map(image => {
-        return `
-        <li class="gallery-item js-image-item">
-  <a class="gallery-link" href="${image.original}">
-    <img
-      class="gallery-image"
-      src="${image.preview}"
-      data-source="${image.original}"
-      alt="${image.description}"
-    />
-  </a>
-</li>
-        `;
-    }).join('');
+  return images.map(image => {
+    return `
+      <li class="gallery-item js-image-item">
+        <a class="gallery-link" href="${image.original}">
+          <img
+            class="gallery-image"
+            src="${image.preview}"
+            data-source="${image.original}"
+            alt="${image.description}"
+          />
+        </a>
+      </li>
+    `;
+  }).join('');
 }
+
 
 container.addEventListener('click', onImageClick);
 
 function onImageClick(event) {
-    if (event.target === event.currentTarget) {
-    
-        return;
+  event.preventDefault(); 
+
+  const target = event.target;
+  if (target.nodeName !== 'IMG') {
+    return; 
   }
+
+  const largeImageURL = target.dataset.source; 
+
+ 
+  const instance = basicLightbox.create(`
+    <img src="${largeImageURL}" alt="${target.alt}" />
+  `);
+
+  instance.show();
 }
+
 
